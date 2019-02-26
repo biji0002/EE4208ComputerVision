@@ -18,19 +18,20 @@ while(number<10):
     )
     
     # Draw a rectangle around the faces and eyes
-
     for (x, y, w, h) in faces:
 
         cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
+        #crop the image, resize to 100*100
         roi_gray = gray[y:y+h, x:x+w]
-        cv2.imwrite('CVpro1/cap/crop'+str(number)+'.jpg',roi_gray)
+        resized = cv2.resize(roi_gray,(100,100))
+        #save image in crop folder,required to create before running code
+        cv2.imwrite('CVpro1/cap/crop'+str(number)+'.jpg',resized)
         number = number +1
         print(w,h)
-        cv2.waitKey(200)
-
+        cv2.waitKey(150)
 
     # Display the resulting frame
-    cv2.imshow('Video', gray)
+    cv2.imshow('Video', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
