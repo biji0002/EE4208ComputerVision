@@ -1,14 +1,12 @@
 import base_faces_lib as lib
 import numpy
 
-def zncc_test(input_img):
+
+#input_imag:img to be matched   #base_matrix_normalised:image database
+def zncc_test(input_img, base_matrix_normalised):
 	#mean adjust and normalised the imput image
 	input_img = lib.mean_adjustment(input_img)
 	input_img = lib.normalised_vector(input_img)
-	print(input_img)
-
-	#import the mean adjusted image base matrix
-	base_matrix_normalised = lib.ini_img_base()
 
 	array_similarity = numpy.zeros(len(base_matrix_normalised))
 	array_key = numpy.arange(0,len(base_matrix_normalised))
@@ -30,7 +28,6 @@ def zncc_test(input_img):
 		(array_similarity[i], array_similarity[swap]) = (array_similarity[swap], array_similarity[i])
 		(array_key[i], array_key[swap]) = (array_key[swap], array_key[i])
 
-	print(array_key)
-	print(array_similarity)
+	print(array_similarity[len(array_similarity)-1])
     
 	return array_key[len(array_key)-1]
