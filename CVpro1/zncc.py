@@ -28,6 +28,6 @@ def zncc_test(input_img, base_matrix_normalised):
 		(array_similarity[i], array_similarity[swap]) = (array_similarity[swap], array_similarity[i])
 		(array_key[i], array_key[swap]) = (array_key[swap], array_key[i])
 
-	print(array_similarity[len(array_similarity)-1])
+#	print(array_similarity[len(array_similarity)-1])
     
 	return array_key[len(array_key)-1]
