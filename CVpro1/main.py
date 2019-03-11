@@ -11,7 +11,7 @@ import base_faces_lib as lib
 base_matrix_normalised = lib.ini_img_base()
 
 #input the test image
-img = Image.open('3.png').convert('L')  #import the image base
+img = Image.open('pan_zexu9.jpg').convert('L')  
 img_arr_2d = numpy.asarray(img)              #convert the image to 2d array
 img_arr_1d = img_arr_2d.flatten()
 test_array = numpy.zeros(len(img_arr_1d))

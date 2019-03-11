@@ -33,7 +33,7 @@ def ini_img_base():
 	array_int = numpy.zeros(10000)
 
 	for x in range(0, no_of_image):
-		img = Image.open('%s.png' % x).convert('L')  #import the image base
+		img = Image.open('%s.jpg' % x).convert('L')  #import the image base
 		img_arr_2d = numpy.asarray(img)              #convert the image to 2d array
 		img_arr_1d = img_arr_2d.flatten()			 #convert the image 2d array to 1d array
 		for y in range(0, len(img_arr_1d)):
