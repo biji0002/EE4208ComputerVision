@@ -28,12 +28,20 @@ def normalised_vector(array_1d):
 #Ini func that create and return the mean adjusted database matrix
 def ini_img_base():
 	#Create the base 100*10000 matrix
+<<<<<<< HEAD
 	no_of_image = 5
+=======
+	no_of_image = 40
+>>>>>>> 3e5b3be8ab4667af69fe550e6821ef14105854f9
 	baseMatrix = numpy.zeros((no_of_image,10000))
 	array_int = numpy.zeros(10000)
 
 	for x in range(0, no_of_image):
+<<<<<<< HEAD
 		img = Image.open('%s.png' % x).convert('L')  #import the image base
+=======
+		img = Image.open('cap/%s.jpg' % x).convert('L')  #import the image base
+>>>>>>> 3e5b3be8ab4667af69fe550e6821ef14105854f9
 		img_arr_2d = numpy.asarray(img)              #convert the image to 2d array
 		img_arr_1d = img_arr_2d.flatten()			 #convert the image 2d array to 1d array
 		for y in range(0, len(img_arr_1d)):
@@ -42,4 +50,7 @@ def ini_img_base():
 		baseMatrix[x,:] = array_int[:]              #save the mean adjusted array in the the base matrix
 
 	return baseMatrix
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3e5b3be8ab4667af69fe550e6821ef14105854f9
