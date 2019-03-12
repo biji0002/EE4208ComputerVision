@@ -46,7 +46,7 @@ def ini_img_base():
 		img_arr_1d = img_arr_2d.flatten()			 #convert the image 2d array to 1d array
 		for y in range(0, len(img_arr_1d)):
 			array_int[y] =  img_arr_1d[y]          
-		array_int = mean_adjustment(array_int)     #perform the mean adjustment for teh 1d array
+		#array_int = mean_adjustment(array_int)     #perform the mean adjustment for teh 1d array
 		baseMatrix[x,:] = array_int[:]              #save the mean adjusted array in the the base matrix
 
 	return baseMatrix

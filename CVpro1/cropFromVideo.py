@@ -2,11 +2,11 @@ import cv2
 import numpy as np
 
 #import cv2 Classifiers
-face_cascade = cv2.CascadeClassifier('opencv/data/haarcascades/haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
 video_capture = cv2.VideoCapture(0)
 number = 0
 
-while(number<10):
+while(number<5):
     # Capture frame-by-frame
     ret, frame = video_capture.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -25,7 +25,7 @@ while(number<10):
         roi_gray = gray[y:y+h, x:x+w]
         resized = cv2.resize(roi_gray,(100,100))
         #save image in crop folder,required to create before running code
-        cv2.imwrite('CVpro1/cap/crop'+str(number)+'.jpg',resized)
+        cv2.imwrite('cap/'+str(number)+'.jpg',resized)
         number = number +1
         print(w,h)
         cv2.waitKey(150)

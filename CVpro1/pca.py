@@ -27,7 +27,10 @@ print (x,y)
 #find the face_average 1*10000
 face_avg = baseMatrix.sum(axis = 0)/x
 #face minus face_average 40*10000
-avgMatrix=baseMatrix - face_avg
+avgMatrix = np.empty((40,10000),int)
+for cnt in range (0,40):
+
+	avgMatrix[cnt]=baseMatrix[cnt] - face_avg
 
 transMatrix=avgMatrix.transpose()
 
