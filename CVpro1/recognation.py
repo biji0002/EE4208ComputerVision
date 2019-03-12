@@ -8,7 +8,7 @@ video_capture = cv2.VideoCapture(0)
 number = 0
 eigenFaces = efi.eigenFacesImport()
 eigenVector = efi.eigenVectorImport()
-
+print eigenFaces.shape
 while(number<100):
     # Capture frame-by-frame
 	ret, frame = video_capture.read()
@@ -30,7 +30,7 @@ while(number<100):
 	    #save image in crop folder,required to create before running code
 	    cv2.imwrite('temp/crop'+str(number)+'.jpg',resized)
 	    number = number +1
-	    cv2.waitKey(1500)
+	    cv2.waitKey(1000)
 
 	# Display the resulting frame
 	cv2.imshow('Video', frame)
@@ -38,24 +38,27 @@ while(number<100):
 	#calculate nearest eigenFace
 	faceVec = np.resize(resized,(10000,1))
 	RecEigenFace = np.dot(eigenVector,faceVec)
-	print RecEigenFace.shape
+	RecEigenFaceTrans = RecEigenFace.transpose()
+	print RecEigenFaceTrans.shape
 
 
 	minDiff = 1000000000
 	for i in range(0,40):
 		tempFace = eigenFaces[i]
-		result = np.absolute(np.array(RecEigenFace) - np.array(tempFace))
+		print tempFace.shape
+
+		result = np.absolute(np.array(RecEigenFaceTrans) - np.array(tempFace))
 		diff = np.sum(result)
-		#print diff
+		#print diff`
 		if diff<minDiff:
 			minDiff = diff 
 			nearestFace = i
 
 	print ("recognized as ", nearestFace)
 	print ("minimun difference is ",minDiff)
-	path = 'cap/'+str(i)+'.jpg'
+	path = 'cap/'+str(nearestFace)+'.jpg'
 	img = cv2.imread(path)
-	cv2.imshow("recognation",img)
+	cv2.imshow('recognized as: '+str(nearestFace)+'.jpg',img)
 
 
 	if cv2.waitKey(1) & 0xFF == ord('q'):
