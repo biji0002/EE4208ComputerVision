@@ -6,10 +6,10 @@ imgNum = 35
 #import cv2 Classifiers
 face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
 video_capture = cv2.VideoCapture(0)
-number = 0
+#number = 0
 
 eigenFaces = bfl.calcEigFaces()
-eigenVector = bfl.eigenVectorImportnew()
+eigenVector = bfl.eigenVectorImport()
 face_avg = bfl.avgMatrix()
 
 cnt = 0
@@ -17,13 +17,11 @@ while(1):
     # Capture frame-by-frame
 	ret, frame = video_capture.read()
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
 	faces = face_cascade.detectMultiScale(
 	    gray,
 	    scaleFactor=1.3,
 	    minNeighbors=5
-	)
-	
+	)	
 	# Draw a rectangle around the faces and eyes
 	for (x, y, w, h) in faces:
 
@@ -33,8 +31,8 @@ while(1):
 	    resized = cv2.resize(roi_gray,(100,100))
 	    #save image in crop folder,required to create before running code
 	    #cv2.imwrite('temp/crop'+str(number)+'.jpg',resized)
-	    number = number +1
-	    cv2.waitKey(50)
+	    #number = number +1
+	    cv2.waitKey(25)
 	    cnt += 1
 
 	# Display the resulting frame
@@ -50,7 +48,6 @@ while(1):
 		RecEigenFace = np.dot(eigenVector,faceVec)
 		RecEigenFaceTrans = RecEigenFace.transpose()
 		#print RecEigenFaceTrans.shape
-
 
 		minDiff = 1000000000
 		for i in range(0,imgNum):
@@ -75,5 +72,5 @@ while(1):
 		break
 
 # When everything is done, release the capture
-#video_capture.release()
-#cv2.destroyAllWindows()
+video_capture.release()
+cv2.destroyAllWindows()
