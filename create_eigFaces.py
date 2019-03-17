@@ -2,27 +2,38 @@ import numpy as np
 import base_faces_lib as bfl
 from PIL import Image
 imgNum = 35
-
+numEigValue = 300
 eigVector = bfl.eigenVectorImportnew()
 print eigVector.shape
 
-eigFaces = np.empty((imgNum,200),float)
+baseMatrix = bfl.ini_img_base()    #35*10000
+baseMatrixT = baseMatrix.transpose()   #10000*35
+print baseMatrixT.shape
+
+
+
+face_avg = np.empty((1,10000),float)            #1*10000
+face_avg = baseMatrix.sum(axis = 0)/imgNum
+avgMatrix = np.empty((imgNum,10000),float)      #35*10000
+for cnt in range (0,imgNum):
+
+	avgMatrix[cnt]=baseMatrix[cnt] - face_avg
+
+transMatrix=avgMatrix.transpose()               #10000*35
+print transMatrix.shape
+
+
+
+eigFaces = np.empty((numEigValue,imgNum),complex)       #300*35
 number = 0
 #img = Image.open('cap/0.jpg')
-for number in range(0,imgNum):	
-	img = Image.open('cap/'+str(number)+'.jpg').convert('L')
-	img_array_temp = np.asarray(img.getdata())
-	img_array = np.reshape(img_array_temp,(10000,1))
-	eigFace = np.dot(eigVector,img_array)
-	cnt = 0
-	for cnt in range(0,200):
-		eigFaces[number,cnt] = eigFace[cnt,0]
-	number += 1
-	#print img_array.shape
+eigFaces = np.dot(eigVector,transMatrix)
+eigFacesT = eigFaces.transpose()          
 #print eigFaces
-print eigFaces.shape
-eigFacesOutput = np.resize(eigFaces,(imgNum*200,1))
+print eigFacesT.shape
+eigFacesOutput = np.resize(eigFacesT,(imgNum*numEigValue,1))
+
 print eigFacesOutput.shape
 np.savetxt('eigFaces',eigFacesOutput)
 
-
+print eigFacesT

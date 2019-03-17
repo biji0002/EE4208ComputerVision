@@ -1,47 +1,82 @@
 import cv2
 import numpy as np
-from PIL import Image
 import base_faces_lib as bfl
 imgNum = 35
 
-eigenFaces = bfl.eigenFacesImport()
+#import cv2 Classifiers
+face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
+video_capture = cv2.VideoCapture(0)
+number = 0
+
+eigenFaces = bfl.calcEigFaces()
 eigenVector = bfl.eigenVectorImportnew()
-def rgb2gray(rgb):
-
-    r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
-    gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
-
-    return gray
 
 
-for num in range (0,imgNum):
 
-	path = 'cap/'+str(num)+'.jpg'
-	img = cv2.imread(path)
-	imgGray = rgb2gray(img)
-	faceVec = np.resize(imgGray,(10000,1))
-	RecEigenFace = np.dot(eigenVector,faceVec)
-	RecEigenFaceTrans = RecEigenFace.transpose()
-	#print RecEigenFaceTrans.shape
+cnt = 0
+while(1):
+    # Capture frame-by-frame
+	ret, frame = video_capture.read()
+	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+	faces = face_cascade.detectMultiScale(
+	    gray,
+	    scaleFactor=1.3,
+	    minNeighbors=5
+	)
+	
+	# Draw a rectangle around the faces and eyes
+	for (x, y, w, h) in faces:
+
+	    cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
+	    #crop the image, resize to 100*100
+	    roi_gray = gray[y:y+h, x:x+w]
+	    resized = cv2.resize(roi_gray,(100,100))
+	    #save image in crop folder,required to create before running code
+	    cv2.imwrite('temp/crop'+str(number)+'.jpg',resized)
+	    number = number +1
+	    cv2.waitKey(100)
+	    cnt += 1
+
+	# Display the resulting frame
+	cv2.imshow('Video', frame)
+
+	if cnt == 4:
+		cnt = 0
+		#calculate nearest eigenFace
+		faceVec = np.resize(resized,(10000,1))
+		RecEigenFace = np.dot(eigenVector,faceVec)
+		RecEigenFaceTrans = RecEigenFace.transpose()
+		#print RecEigenFaceTrans.shape
 
 
-	minDiff = 1000000000
-	for i in range(0,imgNum):
-		tempFace = eigenFaces[i]
-		#print tempFace.shape
+		minDiff = 1000000000
+		for i in range(0,imgNum):
+			tempFace = eigenFaces[i]
+			tempFaceT = tempFace.transpose()
+			#print tempFace.shape
+			#print RecEigenFaceTrans.shape
+			sum = 0
+			for j in range(0,300):
+				sum = sum + np.square(RecEigenFace[j] - tempFaceT[j])
+			
+			diff = sum
+			#print diff`
+			if diff<minDiff:
+				minDiff = diff 
+				nearestFace = i
 
-		result = np.absolute(np.array(RecEigenFaceTrans) - np.array(tempFace))
-		result1 = np.square(result)
-		result2 = np.sum(result1)
-		diff = np.sqrt(result2)
-		#print diff
-		if diff<minDiff:
-			minDiff = diff 
-			nearestFace = i
-			#print ("recognized as ", nearestFace)
-			#print ("minimun difference is ",minDiff)
-	print("this picture is",num,"recognized as ",nearestFace,"minimun difference is ",minDiff)
-	#print ("recognized as ", nearestFace)
-	#print ("minimun difference is ",minDiff)
+		print ("recognized as ", nearestFace)
+		print ("minimun difference is ",minDiff)
+		path = 'cap/'+str(nearestFace)+'.jpg'
+		img = cv2.imread(path)
+		cv2.imshow('recognized as: '+str(nearestFace)+'.jpg',img)
 
+
+	if cv2.waitKey(1) & 0xFF == ord('q'):
+		break
+
+# When everything is done, release the capture
+#video_capture.release()
+#cv2.destroyAllWindows()
 
