@@ -1,54 +1,35 @@
 import cv2
 import numpy as np
-import eigenFacesImport as efi
 from PIL import Image
 import base_faces_lib as lib
+from numpy import linalg as la
+from tempfile import TemporaryFile
+import simplejson
 
 
-path = "cap/3.jpg"
-img = cv2.imread(path)
-
-def rgb2gray(rgb):
-
-    r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
-    gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
-
-    return gray
-
-imgGray = rgb2gray(img)
-
-baseMatrix = lib.ini_img_base() 
+baseMatrix = np.array([[2.5,2.4],[0.5,0.7],[2.2,2.9],[1.9,2.2],[3.1,3.0],[2.3,2.7],[2,1.6],[1,1.1],[1.5,1.6],[1.1,0.9]])
 #get the shape of the matrix 40*10000
 x,y=baseMatrix.shape
-#find the face_average 1*10000
-face_avg = baseMatrix.sum(axis = 0)/x
+print (x,y)
+
+face_avg = baseMatrix.sum(axis = 0)*1.0/x
+
+avgMatrix = np.empty((10,2))
+
+for cnt in range (0,10):
+
+	avgMatrix[cnt]=baseMatrix[cnt] - face_avg
+
+transMatrix=avgMatrix.transpose()
 
 
-eigenFaces = efi.eigenFacesImport()
-eigenVector = efi.eigenVectorImport()
+#[2]={img_arr_1d,img1_arr_1d}
+#covar,mean =cv2.calcCovarMatrix(img_arr_1d,img1_arr_1d,flags = 0)
+#print img1_arr_1d
 
+covMatrix=np.cov(transMatrix)
+w,v = la.eig(covMatrix)
 
-faceVec = np.resize(imgGray,(10000,1))
-RecEigenFace = np.dot(eigenVector,faceVec)
-RecEigenFaceTrans = RecEigenFace.transpose()
-print RecEigenFaceTrans.shape
-
-
-minDiff = 1000000000
-for i in range(0,40):
-	tempFace = eigenFaces[i]
-	print tempFace.shape
-
-	result = np.absolute(np.array(RecEigenFaceTrans) - np.array(tempFace))
-	diff = np.sum(result)
-	#print diff
-	if diff<minDiff:
-		minDiff = diff 
-		nearestFace = i
-		print ("recognized as ", nearestFace)
-		print ("minimun difference is ",minDiff)
-
-print ("recognized as ", nearestFace)
-print ("minimun difference is ",minDiff)
-
-
+print covMatrix
+print w
+print v

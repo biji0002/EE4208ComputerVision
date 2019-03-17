@@ -43,8 +43,8 @@ w,v = la.eig(covMatrix)
 
 
 
-w1 = w[0:400]
-v1 = v[0:400,0:10000]
+w1 = w[0:200]
+v1 = v[0:200,0:10000]
 v_prime = np.reshape(v1,(400*10000,1))
 np.savetxt("eignevalue",w1)
 np.savetxt("eignevector",v_prime)
