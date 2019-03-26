@@ -17,7 +17,7 @@ int main(void)
 
 	FILE *input;
 	uint8_t get_char;
-	input = fopen("/home/pzx/Documents/ee4208/assig2/cana.raw","rb");;
+	input = fopen("cana.raw","rb");;
 
 	for (int i = 0; i < 5; i++)
 	{
