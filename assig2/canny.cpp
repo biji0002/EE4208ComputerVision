@@ -5,6 +5,7 @@
 #include <fstream>
 #include <stdint.h>
 
+
 uint8_t img_header[5];
 
 #define img_row                     *(uint16_t *)(img_header)
@@ -15,6 +16,7 @@ int main(void)
 {
 	using namespace std;
 
+	//Input the raw image, read the raw image to a matrix
 	FILE *input;
 	uint8_t get_char;
 	input = fopen("cana.raw","rb");;
@@ -25,24 +27,42 @@ int main(void)
 
 	}
 
-	int img[img_row][img_col];
+	//define all image arrays
+	int img[img_row][img_col]; 			//Original image
+	int img_gaussian[img_row][img_col]; //Image after gaussian mask
+	int img_sobel[img_row][img_col];  	//Image after sobel mask
+	int img_nms[img_row][img_col];  	//Image after non maximum supression
+	int img_ht[img_row][img_col]; 		// Image after hysterisis tresholding
 
-	cout<<"img row = "<<img_row<<endl;
-	cout<<"img col = "<<img_col<<endl;
 
 	for (int i = 0; i < img_row; i++)
 	{
 		for (int j = 0; j < img_col; j++)
 		{
-			img[i][j] = fgetc(input);
-//			printf("%02x ", img[i][j]);
+			img[i][j] = fgetc(input);     //read the image to a 2D array
 		}
-//		printf("\n");
 	}
 
-	printf("%02x \n", img[img_row-1][img_col-3]);
-	printf("%02x \n", img[img_row-1][img_col-2]);
-	printf("%02x \n", img[img_row-1][img_col-1]);
+	//Image after gaussian mask
+
+
+
+
+	//Image after sobel mask
+
+
+
+
+
+	//Image after non maximum suppression
+
+
+
+
+
+	//Image after hysterisis tresholding
+
+
 
 
 
