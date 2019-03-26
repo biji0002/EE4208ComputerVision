@@ -28,19 +28,18 @@ int main(void)
 	}
 
 	//define all image arrays
-	int img[img_row][img_col]; 			//Original image
-	int img_gaussian[img_row][img_col]; //Image after gaussian mask
-	int img_sobel[img_row][img_col];  	//Image after sobel mask
-	int img_nms[img_row][img_col];  	//Image after non maximum supression
-	int img_ht[img_row][img_col]; 		// Image after hysterisis tresholding
+	int img[img_row*img_col]; 			//Original image
+	int img_gaussian[img_row*img_col]; //Image after gaussian mask
+	int img_sobel_low[img_row*img_col];  	//Image after sobel mask using lower treshold
+	int img_nms_low[img_row*img_col];  	//Image after non maximum supression using lower treshold
+	int img_sobel_high[img_row*img_col];  	//Image after sobel mask using higher treshold
+	int img_nms_high[img_row*img_col];  	//Image after non maximum supression using higher treshild
+	int img_ht[img_row*img_col]; 		// Image after hysterisis tresholding 
 
 
-	for (int i = 0; i < img_row; i++)
+	for (int i = 0; i < img_row*img_col; i++)
 	{
-		for (int j = 0; j < img_col; j++)
-		{
-			img[i][j] = fgetc(input);     //read the image to a 2D array
-		}
+		img[i] = fgetc(input);     //read the image to an array
 	}
 
 	//Image after gaussian mask
