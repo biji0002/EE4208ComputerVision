@@ -19,7 +19,7 @@ int main(void)
 	//Input the raw image, read the raw image to a matrix
 	FILE *input;
 	uint8_t get_char;
-	input = fopen("cana.raw","rb");;
+	input = fopen("raw_images/cana.raw","rb");;
 
 	for (int i = 0; i < 5; i++)
 	{
