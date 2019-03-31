@@ -59,11 +59,5 @@ int main(void)
 
 
 
-	//Image after hysterisis tresholding
-
-
-
-
-
 	return 0;
 }
