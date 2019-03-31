@@ -6,40 +6,19 @@
 #include <stdint.h>
 #include <cmath>
 
+
 using namespace std;
+
 uint8_t img_header[5];
 
 #define row                     *(uint16_t *)(img_header)
 #define col                     *(uint16_t *)(img_header + 2)
 #define pixel_size              *(uint8_t *)(img_header + 4)
 
-double** GaussianFilter (int kernal_size, double sigma) {
-	int bound = (kernal_size-1)/2;
-	double** Gkernal=0;
-	Gkernal = new double*[kernal_size];
-	double sum = 0;
-	cout<<"Kernal size is: "<<kernal_size<<endl;
-	for (int x = -bound; x <= bound; x++){
-		Gkernal[x+bound] = new double[kernal_size];
 
-		for (int y = -bound; y <= bound; y++){
-			double expo =(x*x+y*y)/(2*sigma*sigma);
-			Gkernal[x+bound][y+bound] =  exp(-expo)/(sigma*sqrt(2*M_PI));
-			sum += Gkernal[x+bound][y+bound];
-			cout<< Gkernal[x+bound][y+bound]<<" ";
-		}
-		cout<< endl;
-	}
-	return Gkernal;
-}
 
 int main(void)
 {
-
-
-
-	cout<<endl<<"GKernal is passed to filter: "<<endl;
-
 	//Input the raw image, read the raw image to a matrix
 	FILE *input;
 	uint8_t get_char;
@@ -69,11 +48,10 @@ int main(void)
 		
 	}
 
-	//printf("%02x \n", img[row-1][col-2]);
 
 	//Image after gaussian mask
 	
-	double sigma = 1;
+	double sigma = 3;
 	int kernal_size, gaussianoffset;
 
 	if(sigma <0.8){
@@ -106,8 +84,37 @@ int main(void)
 	}
 
 
-	double** filter = GaussianFilter(kernal_size,sigma);
+	float filter[kernal_size][kernal_size];
+	int gaussian_mask[kernal_size][kernal_size];
 
+
+	int bound = (kernal_size-1)/2;
+	
+	for (int x = -bound; x <= bound; x++){
+		for (int y = -bound; y <= bound; y++){
+			float expo =(x*x+y*y)/(2*sigma*sigma);
+			filter[x+bound][y+bound] =  exp(-expo)/(sigma*sqrt(2*M_PI));
+		}
+	}
+
+	float temp = filter[0][0];
+	int scale = 0;
+
+	for (int i = 0; i < kernal_size; i++)
+	{
+		for (int j = 0; j < kernal_size; j++)
+		{
+			gaussian_mask[i][j] = filter[i][j] / temp;
+			scale = scale + gaussian_mask[i][j];
+			printf("%d   ", gaussian_mask[i][j]);
+		}
+		printf(" \n");
+	}
+
+	//printf("%d   ", gaussian_mask[0][0]);
+
+
+	printf("The scale is %d \n", scale);
 
 
 
@@ -120,16 +127,16 @@ int main(void)
 			{
 				for (int b = 0; b < kernal_size; b++)
 				{
-					sum = sum + filter[a][b]*img[i+a-gaussianoffset][j+b-gaussianoffset];
+					sum = sum + gaussian_mask[a][b]*img[i+a-gaussianoffset][j+b-gaussianoffset];
 				}
 			}
-			img_gaussian[i][j] = sum;
-
+			img_gaussian[i][j] = round(sum/scale);
+			if (img_gaussian[i][j] > 255)
+				printf("%d  ", img_gaussian[i][j]);
 		}
 	}
 
-
-	//print image after gaussion
+	//printf("Image has convolute with gaussian\n");
 
 	//Image after sobel mask
 	int sobelx[3][3] = {{-1, -2, -1},{0, 0, 0},{1, 2, 1}};
