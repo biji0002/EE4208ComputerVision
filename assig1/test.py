@@ -1,6 +1,9 @@
-import base_faces_lib as bfl
+import cv2
+import numpy as np
+from PIL import Image
 
+img = Image.open(cap/"0.jpg")
 
-baseMatrix,imgNum,numEigValue = bfl.ini_img_base() 
+cv2.imgshow(img)
 
-print baseMatrix.shape,imgNum,numEigValue
+print("test")
