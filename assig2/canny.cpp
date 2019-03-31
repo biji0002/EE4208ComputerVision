@@ -51,7 +51,7 @@ int main(void)
 
 	//Image after gaussian mask
 	
-	double sigma = 1;
+	double sigma = 3;
 	int kernal_size, gaussianoffset;
 
 	if(sigma <0.8){
@@ -104,7 +104,7 @@ int main(void)
 	{
 		for (int j = 0; j < kernal_size; j++)
 		{
-			gaussian_mask[i][j] = filter[i][j] / temp;
+			gaussian_mask[i][j] = round(filter[i][j] / temp);
 			scale = scale + gaussian_mask[i][j];
 			printf("%d   ", gaussian_mask[i][j]);
 		}
@@ -118,9 +118,9 @@ int main(void)
 
 
 
-	for (int i = 1; i < row-1; i++)
+	for (int i = gaussianoffset; i < row-gaussianoffset; i++)
 	{
-		for (int j = 1; j < col-1; j++)
+		for (int j = gaussianoffset; j < col-gaussianoffset; j++)
 		{
 			int sum = 0;
 			for (int a = 0; a < kernal_size; a++)
@@ -131,8 +131,6 @@ int main(void)
 				}
 			}
 			img_gaussian[i][j] = round(sum/scale);
-			if (img_gaussian[i][j] > 255)
-				img_gaussian[i][j] = 255;
 		}
 	}
 
