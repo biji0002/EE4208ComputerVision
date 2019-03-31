@@ -22,7 +22,7 @@ int main(void)
 	//Input the raw image, read the raw image to a matrix
 	FILE *input;
 	uint8_t get_char;
-	input = fopen("raw_images/cana.raw","rb");;
+	input = fopen("raw_images/leaf.raw","rb");;
 
 	//read the image header
 	for (int i = 0; i < 5; i++)
@@ -51,7 +51,7 @@ int main(void)
 
 	//Image after gaussian mask
 	
-	double sigma = 3;
+	double sigma = 1;
 	int kernal_size, gaussianoffset;
 
 	if(sigma <0.8){
@@ -127,10 +127,11 @@ int main(void)
 			{
 				for (int b = 0; b < kernal_size; b++)
 				{
-					sum = sum + gaussian_mask[a][b]*img[i+a-gaussianoffset][j+b-gaussianoffset];
+					sum = sum + gaussian_mask[a][b] * img[i+a-gaussianoffset][j+b-gaussianoffset];
 				}
 			}
 			img_gaussian[i][j] = round(sum/scale);
+
 		}
 	}
 
