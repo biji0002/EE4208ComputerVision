@@ -51,7 +51,7 @@ int main(void)
 
 	//Image after gaussian mask
 	
-	double sigma = 3;
+	double sigma = 1;
 	int kernal_size, gaussianoffset;
 
 	if(sigma <0.8){
@@ -132,7 +132,7 @@ int main(void)
 			}
 			img_gaussian[i][j] = round(sum/scale);
 			if (img_gaussian[i][j] > 255)
-				printf("%d  ", img_gaussian[i][j]);
+				img_gaussian[i][j] = 255;
 		}
 	}
 
@@ -181,7 +181,20 @@ int main(void)
 
 
 
-
+	//display img
+	FILE* pgmimg; 
+    pgmimg = fopen("output1.pgm", "wb"); 
+    fprintf(pgmimg, "P2\n");  
+    fprintf(pgmimg, "%d %d\n", row, col);  
+    fprintf(pgmimg, "255\n");  
+    int count = 0; 
+    for (int i = 0; i < row; i++) { 
+        for (int j = 0; j < col; j++) { 
+            fprintf(pgmimg, "%d ", img_gaussian[i][j]); 
+        } 
+        fprintf(pgmimg, "\n"); 
+    } 
+    fclose(pgmimg);
 
 	return 0;
 }
