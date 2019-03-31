@@ -11,8 +11,8 @@ using namespace std;
 
 uint8_t img_header[5];
 
-#define row                     *(uint16_t *)(img_header)
-#define col                     *(uint16_t *)(img_header + 2)
+#define col                     *(uint16_t *)(img_header)
+#define row                     *(uint16_t *)(img_header + 2)
 #define pixel_size              *(uint8_t *)(img_header + 4)
 
 
@@ -31,6 +31,7 @@ int main(void)
 
 	}
 
+
 	//define all image arrays
 	int img[row][col]; 			//Original image
 	int img_gaussian[row][col]; //Image after gaussian mask
@@ -48,52 +49,45 @@ int main(void)
 		
 	}
 
+	printf("no of rows: %d  , no of cols : %d \n", row, col);
+
 
 	//Image after gaussian mask
 	
-	double sigma = 1;
-	int kernal_size, gaussianoffset;
+	double sigma = 0.5;
+	int kernal_size;
 
 	if(sigma <0.8){
 		kernal_size = 3;
-		gaussianoffset = 1;
 	}
 	else if(sigma <1.2){
 		kernal_size = 5;
-		gaussianoffset = 2;
 	}
 	else if(sigma <1.6){
 		kernal_size = 7;
-		gaussianoffset = 3;
 	}
 	else if(sigma <2){
 		kernal_size = 9;
-		gaussianoffset = 4;
 	}
 	else if(sigma <2.4){
 		kernal_size = 11;
-		gaussianoffset = 5;
 	}
 	else if(sigma <2.8){
 		kernal_size = 13;
-		gaussianoffset = 6;
 	}
 	else{
 		kernal_size = 15;
-		gaussianoffset = 7;
 	}
 
+	int gaussianoffset = (kernal_size-1)/2;
 
 	float filter[kernal_size][kernal_size];
 	int gaussian_mask[kernal_size][kernal_size];
-
-
-	int bound = (kernal_size-1)/2;
 	
-	for (int x = -bound; x <= bound; x++){
-		for (int y = -bound; y <= bound; y++){
+	for (int x = -gaussianoffset; x <= gaussianoffset; x++){
+		for (int y = -gaussianoffset; y <= gaussianoffset; y++){
 			float expo =(x*x+y*y)/(2*sigma*sigma);
-			filter[x+bound][y+bound] =  exp(-expo)/(sigma*sqrt(2*M_PI));
+			filter[x+gaussianoffset][y+gaussianoffset] =  exp(-expo)/(sigma*sqrt(2*M_PI));
 		}
 	}
 
@@ -127,10 +121,13 @@ int main(void)
 			{
 				for (int b = 0; b < kernal_size; b++)
 				{
-					sum = sum + gaussian_mask[a][b] * img[i+a-gaussianoffset][j+b-gaussianoffset];
+					sum = sum + gaussian_mask[a][b] * img[i-gaussianoffset+a][j-gaussianoffset+b];
+
 				}
 			}
+
 			img_gaussian[i][j] = round(sum/scale);
+			img_sobel[i][j] = img[i][j];
 
 		}
 	}
@@ -184,7 +181,7 @@ int main(void)
 	FILE* pgmimg; 
     pgmimg = fopen("output1.pgm", "wb"); 
     fprintf(pgmimg, "P2\n");  
-    fprintf(pgmimg, "%d %d\n", row, col);  
+    fprintf(pgmimg, "%d %d\n", col, row);  
     fprintf(pgmimg, "255\n");  
     int count = 0; 
     for (int i = 0; i < row; i++) { 

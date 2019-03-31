@@ -196,14 +196,14 @@ int main(void)
 //save image
 
 	FILE* pgmimg; 
-    pgmimg = fopen("output1.pgm", "wb"); 
+    pgmimg = fopen("output.pgm", "wb"); 
     fprintf(pgmimg, "P2\n");  
     fprintf(pgmimg, "%d %d\n", row, col);  
     fprintf(pgmimg, "255\n");  
     int count = 0; 
     for (int i = 0; i < row; i++) { 
         for (int j = 0; j < col; j++) { 
-            fprintf(pgmimg, "%d ", img_sobel_x); 
+            fprintf(pgmimg, "%d ", imgGaussion[i][j]); 
         } 
         fprintf(pgmimg, "\n"); 
     } 
