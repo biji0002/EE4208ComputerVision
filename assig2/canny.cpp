@@ -14,7 +14,7 @@ uint8_t img_header[5];
 #define col                     *(uint16_t *)(img_header)
 #define row                     *(uint16_t *)(img_header + 2)
 #define pixel_size              *(uint8_t *)(img_header + 4)
-
+#define PI 3.14159265
 
 
 int main(void)
@@ -22,7 +22,7 @@ int main(void)
 	//Input the raw image, read the raw image to a matrix
 	FILE *input;
 	uint8_t get_char;
-	input = fopen("raw_images/leaf.raw","rb");;
+	input = fopen("raw_images/fruit.raw","rb");;
 
 	//read the image header
 	for (int i = 0; i < 5; i++)
@@ -175,18 +175,86 @@ int main(void)
 
 	//Image after non maximum suppression
 
+    int magnitude[row][col];
+    int treshold = 0 ;
+    int magnitude_NMS[row][col];
+
+    for (int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < col; j++)
+			magnitude[i][j] = sqrt(pow(img_sobel_x[i][j],2)+pow(img_sobel_y[i][j],2));
+	}
+	
+	for (int i = 1; i < row-1; i++)
+	{
+		for (int j = 1; j < col-1; j++)
+		{
+			if (magnitude[i][j] != 0)
+			{
+				float angle = atan(float(img_sobel_y[i][j])/img_sobel_x[i][j])*180/PI;
+				if (angle < 0)
+					angle = angle + 180;
+
+				if (angle < 22.5 || angle >= 157.5)
+				{
+					if(magnitude[i][j]>=magnitude[i-1][j] && magnitude[i][j]>=magnitude[i+1][j])
+					{
+						magnitude_NMS[i][j] = magnitude[i][j];
+						magnitude_NMS[i-1][j] = 0;
+						magnitude_NMS[i+1][j] = 0;
+					}
+				}
+
+				if (angle >=22.5 && angle < 67.5)
+				{
+					if(magnitude[i][j]>=magnitude[i-1][j-1] && magnitude[i][j]>=magnitude[i+1][j+1])
+					{
+						magnitude_NMS[i][j] = magnitude[i][j];
+						magnitude_NMS[i-1][j-1] = 0;
+						magnitude_NMS[i+1][j+1] = 0;
+					}
+				}
+
+				if (angle >= 67.5 && angle < 112.5)
+				{
+					if(magnitude[i][j]>=magnitude[i][j-1] && magnitude[i][j]>=magnitude[i][j+1])
+					{
+						magnitude_NMS[i][j] = magnitude[i][j];
+						magnitude_NMS[i][j-1] = 0;
+						magnitude_NMS[i][j+1] = 0;
+					}
+				}
+
+				if (angle >= 112.5 && angle < 157.5)
+				{
+					if(magnitude[i][j]>=magnitude[i-1][j+1] && magnitude[i][j]>=magnitude[i+1][j-1])
+					{
+						magnitude_NMS[i][j] = magnitude[i][j];
+						magnitude_NMS[i-1][j+1] = 0;
+						magnitude_NMS[i+1][j-1] = 0;
+					}
+				}
+
+			}
+		}
+	}
 
 
 	//display img
 	FILE* pgmimg; 
-    pgmimg = fopen("output1.pgm", "wb"); 
+    pgmimg = fopen("test_img/test.pgm", "wb"); 
     fprintf(pgmimg, "P2\n");  
     fprintf(pgmimg, "%d %d\n", col, row);  
     fprintf(pgmimg, "255\n");  
     int count = 0; 
     for (int i = 0; i < row; i++) { 
-        for (int j = 0; j < col; j++) { 
-            fprintf(pgmimg, "%d ", img_gaussian[i][j]); 
+        for (int j = 0; j < col; j++) {
+        	int temp = magnitude_NMS[i][j];
+        	if (temp>255)
+        		temp = 255;
+        	if (temp<0)
+        		temp = 0;
+            fprintf(pgmimg, "%d ", temp); 
         } 
         fprintf(pgmimg, "\n"); 
     } 

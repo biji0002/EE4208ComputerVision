@@ -192,7 +192,7 @@ int main(void)
 
 	//Image after non maximum suppression
 
- cout<<"image_sobel_x[i][j] is "<<img_sobel_x[7][4]<<endl;
+ 	cout<<"image_sobel_x[i][j] is "<<img_sobel_x[7][4]<<endl;
     float magnitude[row][col];
     float norm[row][col];
     int direction[row][col];
@@ -201,49 +201,7 @@ int main(void)
 
     float total = 0;
      
-    //////////////NMS Way_1
-    /*for (int i = 0; i < row; i++)
-	{
-		for (int j = 0; j < col; j++)
-		{   
 
-
-			magnitude[i][j] = sqrt(pow(img_sobel_x[i][j],2)+pow(img_sobel_y[i][j],2));
-			norm[i][j] = (img_sobel_x[i][j]*img_sobel_y[i][j])/magnitude[i][j];
-			
-			
-			if(norm[i][j] > 0)
-			{	
-				direction[i][j] = 45;
-			}
-			else
-			{
-				direction[i][j] = 135;
-			}
-
-			if((-tolerance)<=img_sobel_x[i][j]<=tolerance)
-			{
-				direction[i][j] = 90;
-			}
-			else
-			{
-
-			}
-
-			if((-tolerance)<=img_sobel_y[i][j]<=tolerance)
-			{
-				direction[i][j] = 0;
-			}
-			else
-			{
-
-			}
-
-			
-
-		}
-	}*/
-///////////NMS_Way2
 	for (int i = 0; i < row; i++)
 	{
 		for (int j = 0; j < col; j++)
@@ -401,14 +359,14 @@ int main(void)
 
 	//display img
 	FILE* pgmimg; 
-    pgmimg = fopen("test_direction.pgm", "wb"); 
+    pgmimg = fopen("test_img/test.pgm", "wb"); 
     fprintf(pgmimg, "P2\n");  
     fprintf(pgmimg, "%d %d\n", col, row);  
     fprintf(pgmimg, "255\n");  
     int count = 0; 
     for (int i = 0; i < row; i++) { 
         for (int j = 0; j < col; j++) { 
-            int temp = norm[i][j]; 
+            int temp = magnitude_NMS[i][j]; 
             
             // Writing the gray values in the 2D array to the file 
             fprintf(pgmimg, "%d ", temp); 
