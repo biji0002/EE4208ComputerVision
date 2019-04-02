@@ -131,17 +131,8 @@ int main(void)
 
 		}
 	}
-///////side
-	for(int i = 0;i<row;i++)
-	{
-		img_gaussian[i][0] = img_gaussian[i][1];
-		img_gaussian[i][col-1] = img_gaussian[i][col-2];
-	}
-	for(int j = 0;j<col;j++)
-	{
-		img_gaussian[0][j] = img_gaussian[1][j];
-		img_gaussian[row-1][j] = img_gaussian[row-2][j];
-	}
+
+
 
 	//printf("Image has convolute with gaussian\n");
 
@@ -186,15 +177,15 @@ int main(void)
 
 	//Image after non maximum suppression
 
- cout<<"image_sobel_x[i][j] is "<<img_sobel_x[7][4]<<endl;
+ 	cout<<"image_sobel_x[i][j] is "<<img_sobel_x[7][4]<<endl;
     float magnitude[row][col];
     float norm[row][col];
     int direction[row][col];
     float tolerance = 0;
-    float treshold ;
+    float treshold =0;
 
     float total = 0;
-     
+    /*
     //////////////NMS Way_1
     for (int i = 0; i < row; i++)
 	{
@@ -237,48 +228,56 @@ int main(void)
 
 		}
 	}
+
+	*/
 ///////////NMS_Way2
-	/*for (int i = 0; i < row; i++)
+	for (int i = 0; i < row; i++)
 	{
 		for (int j = 0; j < col; j++)
 		{   
 
 			
 			magnitude[i][j] = sqrt(pow(img_sobel_x[i][j],2)+pow(img_sobel_y[i][j],2));
+			if(magnitude[i][j]>255)
+				magnitude[i][j] = 255;
+			if(magnitude[i][j]<treshold)
+				magnitude[i][j] = 0;
+			
             if(img_sobel_x[i][j]!=0)
             {
-			norm[i][j] = atan(img_sobel_y[i][j]/img_sobel_x[i][j])*180/PI;
-			float difference1 = fabs(norm[i][j]-0);
-			float difference2 = fabs(norm[i][j]-45);
-			float difference3 = fabs(norm[i][j]-90);
-			float difference4 = fabs(norm[i][j]-135);
+				norm[i][j] = atan(img_sobel_y[i][j]/img_sobel_x[i][j])*180/PI;
 
-			float min = difference1;
-			norm[i][j] = 0;
-			  if(difference2<min)
-			  {
-                   norm[i][j] = 45;
-			  }
-			  if(difference3<min)
-			  {
-                   norm[i][j] = 90;
-			  }
-			  if(difference4<min)
-			  {
-                   norm[i][j] = 135;
-			  }
+				if(norm[i][j] < 0)
+					norm[i][j] + 180;
+
+
+				float difference1 = fabs(norm[i][j]-0);
+				float difference2 = fabs(norm[i][j]-45);
+				float difference3 = fabs(norm[i][j]-90);
+				float difference4 = fabs(norm[i][j]-135);
+
+				float min = difference1;
+				norm[i][j] = 0;
+				if(difference2<min)
+				{
+					norm[i][j] = 45;
+				}
+				if(difference3<min)
+				{
+					norm[i][j] = 90;
+				}
+				if(difference4<min)
+				{
+					norm[i][j] = 135;
+				}
 		    }
 		    else
 		    {
-		    	norm[i][j] = 90;
+				norm[i][j] = 90;
 		    }
-			
-			
-
-			
 
 		}
-	}*/
+	}
 	
 	float magnitude_NMS[row][col];
 ////apply MNS
@@ -340,52 +339,7 @@ int main(void)
 
 		}
 	}
-//////sides
-	for(int i = 0;i<row;i++)
-	{
-		magnitude_NMS[i][0] = 0;
-		magnitude_NMS[i][col-1] = 0;
-	}
-	for(int j = 0;j<col;j++)
-	{
-		magnitude_NMS[0][j] = 0;
-		magnitude_NMS[row-1][j] = 0;
-	}
-	//////////compute treshold
-    int total_num = 0;
-    for (int i = 0; i < row; i++)
-	{
-		for (int j = 0; j < col; j++)
-		{
-			if(-1<magnitude_NMS[i][j]&&magnitude_NMS[i][j]<256)
-			{
-				total = total + magnitude_NMS[i][j];
-				total_num++;
-			}
-		}
-	}
-	treshold = (total/total_num)*4;
-	cout<<"treshold is "<<treshold<<endl;
-	///float imgmax = 0;
-	/////////apply treshold,larger to 255, smaller to 0
-    for (int i = 0; i < row; i++)
-	{
-		for (int j = 0; j < col; j++)
-		{
-			if(magnitude_NMS[i][j]>treshold)
-			{
-				magnitude_NMS[i][j] = 255;
-			}
-			else
-			{
-				magnitude_NMS[i][j] = 0;
-			}
 
-		}
-	}
-	/////cout<<"max is "<<imgmax<<endl;
-    
-    cout<<"debug"<<endl;
 
 	//display img
 	FILE* pgmimg; 
