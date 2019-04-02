@@ -22,7 +22,7 @@ int main(void)
 	//Input the raw image, read the raw image to a matrix
 	FILE *input;
 	uint8_t get_char;
-	input = fopen("raw_images/fruit.raw","rb");;
+	input = fopen("raw_images/cana.raw","rb");;
 
 	//read the image header
 	for (int i = 0; i < 5; i++)
@@ -242,7 +242,7 @@ int main(void)
 
 	//display img
 	FILE* pgmimg; 
-    pgmimg = fopen("test_img/test.pgm", "wb"); 
+    pgmimg = fopen("test_img/fruit_nms.pgm", "wb"); 
     fprintf(pgmimg, "P2\n");  
     fprintf(pgmimg, "%d %d\n", col, row);  
     fprintf(pgmimg, "255\n");  
