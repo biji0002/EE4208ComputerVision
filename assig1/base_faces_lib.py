@@ -137,8 +137,8 @@ def avgMatrix():
 def cov(array):
 
 	x,y = array.shape
-	covMatrix = np.zeros((x,x),float)
-	avgMatrix = np.zeros((x,y),float)
+	covMatrix = numpy.zeros((x,x),float)
+	avgMatrix = numpy.zeros((x,y),float)
 	for i in range (0,x):
 		#avgMatrix[i] = covMatrix.sum(axis=1)/x
 		sum = 0
@@ -150,5 +150,5 @@ def cov(array):
 	avgArray = array - avgMatrix
 	#print avgArray
 
-	covMatrix = np.dot(avgArray,avgArray.transpose())/(y-1)
+	covMatrix = numpy.dot(avgArray,avgArray.transpose())/(y-1)
 	return covMatrix
