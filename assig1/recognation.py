@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import base_faces_lib as bfl
-imgNum = 35
+imgNum = 30
 
 #import cv2 Classifiers
 face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
@@ -32,7 +32,7 @@ while(1):
 	    #save image in crop folder,required to create before running code
 	    #cv2.imwrite('temp/crop'+str(number)+'.jpg',resized)
 	    #number = number +1
-	    cv2.waitKey(25)
+	    cv2.waitKey(50)
 	    cnt += 1
 
 	# Display the resulting frame
