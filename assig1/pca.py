@@ -10,10 +10,10 @@ baseMatrix,imgNum,numEigValue = bfl.ini_img_base()
 print imgNum,numEigValue
 #get the shape of the matrix imgNum*10000
 x,y=baseMatrix.shape
-print (x,y)
+#print (x,y)
 #find the face_average 1*10000
 face_avg = baseMatrix.sum(axis = 0)/x
-print face_avg.shape
+#print face_avg.shape
 #face minus face_average imgNum*10000
 avgMatrix = np.empty((imgNum,10000),float)
 for cnt in range (0,imgNum):
@@ -23,7 +23,8 @@ for cnt in range (0,imgNum):
 transMatrix=avgMatrix.transpose()
 print transMatrix.shape
 #calculate covariance matrix
-covMatrix=np.cov(transMatrix)
+covMatrix=bfl.cov(transMatrix)
+print covMatrix.shape
 #calculate eigenvalue and eigenvectors
 eigenValues, eigenVectors = la.eig(covMatrix)
 #obtain eigenvectors sorted based on eigenvalues

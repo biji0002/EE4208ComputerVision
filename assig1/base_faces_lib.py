@@ -3,7 +3,7 @@ import numpy
 import math
 from PIL import Image
 
-imgNum = 35
+imgNum = 30
 numEigValue = 300
 
 
@@ -132,3 +132,23 @@ def avgMatrix():
 	face_avg = numpy.empty((1,10000),float)            #1*10000
 	face_avg = baseMatrix.sum(axis = 0)/imgNum
 	return face_avg
+
+
+def cov(array):
+
+	x,y = array.shape
+	covMatrix = np.zeros((x,x),float)
+	avgMatrix = np.zeros((x,y),float)
+	for i in range (0,x):
+		#avgMatrix[i] = covMatrix.sum(axis=1)/x
+		sum = 0
+		for j in range (0,y):
+			sum += array[i,j]
+		avgMatrix[i,:]=sum/y
+
+	#print avgMatrix
+	avgArray = array - avgMatrix
+	#print avgArray
+
+	covMatrix = np.dot(avgArray,avgArray.transpose())/(y-1)
+	return covMatrix
