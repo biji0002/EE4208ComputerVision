@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import base_faces_lib as bfl
-imgNum = 30
+imgNum = 100
 
 #import cv2 Classifiers
 face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_default.xml')
@@ -49,27 +49,30 @@ while(1):
 		RecEigenFaceTrans = RecEigenFace.transpose()
 		#print RecEigenFaceTrans.shape
 
-		minDiff = 1000000000
+		minDiff = 1000000000000
 		for i in range(0,imgNum):
 			tempFace = eigenFaces[i]
 			#print tempFace.shape
 
-			result = np.absolute(np.array(RecEigenFaceTrans) - np.array(tempFace))
-			diff = np.sum(result)
+			diffArray = np.absolute(np.array(RecEigenFaceTrans) - np.array(tempFace))
+			result = diffArray.astype(int)
+			#diff = np.sum(result)
+			square = np.square(result)
+			SSDdiff = np.sum(square)
 			#print diff`
-			if diff<minDiff:
-				minDiff = diff 
+			if SSDdiff<minDiff:
+				minDiff = SSDdiff 
 				nearestFace = i
 
-		print ("recognized as ", nearestFace)
-		print ("minimun difference is ",minDiff)
-		path = 'cap/'+str(nearestFace)+'.jpg'
-		img = cv2.imread(path)
-		cv2.imshow('recognized as: '+str(nearestFace)+'.jpg',img)
+		print("recognized as ", nearestFace)
+		print("minimun difference is ",minDiff)
+		#path = 'cap/'+str(nearestFace)+'.jpg'
+		#img = cv2.imread(path)
+		#cv2.imshow('recognized as: '+str(nearestFace)+'.jpg',img)
 
 
-	if cv2.waitKey(1) & 0xFF == ord('q'):
-		break
+	#if cv2.waitKey(1) & 0xFF == ord('q'):
+		#break
 
 # When everything is done, release the capture
 video_capture.release()
