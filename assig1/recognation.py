@@ -64,6 +64,18 @@ while(1):
 				minDiff = SSDdiff 
 				nearestFace = i
 
+			if nearestFace in range(80, 84):
+				people = 'Bi JianXin'
+			elif nearestFace in range(85, 89):
+				people = 'Pan Zexu'
+			elif nearestFace in range(90, 94):
+				people = 'Meng Ruoshan'
+			elif nearestFace in range(95, 99):
+				people = 'Li Chang'
+			else:
+				people = 'other people'
+
+
 		print("recognized as ", nearestFace)
 		print("minimun difference is ",minDiff)
 		#path = 'cap/'+str(nearestFace)+'.jpg'
